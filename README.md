@@ -1,7 +1,11 @@
 ## installation
 copy config.example.py to /home/USERNAME/.config/walyrics/config.py
 
+copy `env.example` to `.env` and use your own Genius(c) APIKEY
+
+you have to specify your .env path in your walyrics config
+
 ### dependencies:
 
-you need `lyricsgenius, pillow, playerctl` to run wal
+you need `lyricsgenius, pillow, playerctl, feh` to run wal
 
