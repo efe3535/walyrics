@@ -20,7 +20,11 @@ prev_song = ''
 def on_metadata(player, metadata):
     global prev_song
     global conf
-    image = Image.open(conf.wallpaper)
+    try:
+        image = Image.open(conf.wallpaper)
+    except FileNotFoundError:
+        system(f'notify-send "Wallpaper {conf.wallpaper} not found. Is it a path mistake??"') 
+        exit(1)
     if 'xesam:artist' in metadata.keys() and 'xesam:title' in metadata.keys() and metadata['xesam:title'] != prev_song:
         prev_song = metadata['xesam:title']
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
