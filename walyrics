@@ -30,6 +30,12 @@ def on_metadata(player, metadata):
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
         try:
             lyrics = song.lyrics
+
+            if len(lyrics) <= conf.charlimit:
+                lyrics = song.lyrics
+            else:
+                lyrics = f"Song's lyrics length exceeds your desired maximum char size ({conf.charlimit})"
+        
         except AttributeError:
             lyrics = f"Cannot fetch {metadata['xesam:title']}'s lyrics... It is probably because of it has not been added to Genius Lyrics's list yet."
 
@@ -39,9 +45,14 @@ def on_metadata(player, metadata):
         draw.text((conf.offset_x, conf.offset_y), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left')
 
         fname = randint(1,conf.randlimit)
-        system('rm /tmp/walyrics*.png')
-        image.save(f'/tmp/walyrics{fname}.png')
-        system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+        if conf.persist_wallpapers == False:
+            system('rm /tmp/walyrics*.png')
+            image.save(f'/tmp/walyrics{fname}.png')
+            system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+        
+        else:
+            image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
+            system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
         print('wallpaper set')
 
 player.connect('metadata', on_metadata)
