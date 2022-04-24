@@ -1,4 +1,5 @@
 #!/bin/bash
+echo 'Ignore file exists errors.'
 mkdir ~/.config/walyrics
 cp config.example.py ~/.config/walyrics/config.py
 sudo cp walyrics /usr/local/bin/walyrics
