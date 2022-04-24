@@ -1,0 +1,6 @@
+#!/bin/bash
+mkdir ~/.config/walyrics
+cp config.example.py ~/.config/walyrics/config.py
+sudo cp walyrics /usr/local/bin/walyrics
+mkdir ~/.walyrics
+
