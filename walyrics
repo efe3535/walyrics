@@ -8,7 +8,7 @@ from gi.repository import Playerctl, GLib
 import lyricsgenius
 from random import randint
 from imp import load_source
-conf = load_source('confiig', f'/home/{getlogin()}/.config/walyrics/config.py')
+conf = load_source('config', f'/home/{getlogin()}/.config/walyrics/config.py')
 
 system('clear')
 apikey = get_key(dotenv_path=conf.envpath, key_to_get="GENIUS_APIKEY")
@@ -26,10 +26,10 @@ def on_metadata(player, metadata):
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
         lyrics = song.lyrics
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(conf.fontpath, conf.fontsize)
-        fontcolor = conf.fontcolor
         prev_lyrics = lyrics
-        draw.text((image.width / 2 - (len(lyrics.split('\n')[0]) * conf.fontsize), conf.offset_y), lyrics, font=font, fill=fontcolor, align='left')
+        
+        draw.text((conf.offset_x, conf.offset_y), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left')
+
         fname = randint(1,conf.randlimit)
         system('rm /tmp/walyrics*.png')
         image.save(f'/tmp/walyrics{fname}.png')
