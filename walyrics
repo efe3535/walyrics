@@ -11,7 +11,7 @@ from imp import load_source
 conf = load_source('confiig', f'/home/{getlogin()}/.config/walyrics/config.py')
 
 system('clear')
-apikey = get_key(dotenv_path='.env', key_to_get="GENIUS_APIKEY")
+apikey = get_key(dotenv_path=conf.envpath, key_to_get="GENIUS_APIKEY")
 genius = lyricsgenius.Genius(apikey)
 player = Playerctl.Player()
 
@@ -34,6 +34,7 @@ def on_metadata(player, metadata):
         system('rm /tmp/walyrics*.png')
         image.save(f'/tmp/walyrics{fname}.png')
         system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+        print('wallpaper set')
 
 player.connect('metadata', on_metadata)
 
