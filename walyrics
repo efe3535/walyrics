@@ -8,6 +8,8 @@ from gi.repository import Playerctl, GLib
 import lyricsgenius
 from random import randint
 from imp import load_source
+from requests import get
+
 conf = load_source('config', f'/home/{getlogin()}/.config/walyrics/config.py')
 
 system('clear')
@@ -25,7 +27,16 @@ def on_metadata(player, metadata):
     except FileNotFoundError:
         system(f'notify-send "Wallpaper {conf.wallpaper} not found. Is it a path mistake??"') 
         exit(1)
+
     if 'xesam:artist' in metadata.keys() and 'xesam:title' in metadata.keys() and metadata['xesam:title'] != prev_song:
+        thumb_data = get(metadata['mpris:artUrl'])
+        with open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png", "wb") as handle:
+            handle.write(thumb_data.content)
+            handle.close()
+
+        thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
+        thumb = thumb.resize((conf.thumbsize, conf.thumbsize))
+        thumb.save(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
         prev_song = metadata['xesam:title']
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
         try:
@@ -43,14 +54,18 @@ def on_metadata(player, metadata):
         prev_lyrics = lyrics
         
         draw.text((conf.offset_x, conf.offset_y), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left')
-
+        
         fname = randint(1,conf.randlimit)
         if conf.persist_wallpapers == False:
+            thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
             system('rm /tmp/walyrics*.png')
+            image.paste(thumb, (image.width-conf.thumbsize-conf.offset_x, conf.offset_y))
             image.save(f'/tmp/walyrics{fname}.png')
             system(f'feh --bg-fill /tmp/walyrics{fname}.png')
         
         else:
+            thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
+            image.paste(thumb, (image.width-conf.thumbsize-conf.offset_x, conf.offset_y))
             image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
             system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
         print('wallpaper set')
