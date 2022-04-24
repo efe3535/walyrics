@@ -10,6 +10,7 @@ envpath = 'YOUR ENV FILE PATH' # your env file path: required for genius lyrics 
 persist_wallpapers = False # False by default.
 persistent_wallpapers_dir = f'/home/{getlogin()}/.walyrics/' # if you get an error saying .walyrics folder is not found then simply create it using mkdir.
 
+show_thumbs = True # Show thumbs by default
 thumbsize = 150 # Thumbnail size
 fontsize = 14 # Font size for lyrics
 offset_x = 25 # X axis offset
