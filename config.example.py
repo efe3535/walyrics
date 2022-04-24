@@ -7,7 +7,7 @@ fontcolor = "#4b526d" # text color
 fontpath = '/usr/share/fonts/TTF/iosevka-medium.ttf' # your font's path
 envpath = 'YOUR ENV FILE PATH' # your env file path: required for genius lyrics api
 
-persist_wallpapers = True # False by default.
+persist_wallpapers = False # False by default.
 persistent_wallpapers_dir = f'/home/{getlogin()}/.walyrics/' # if you get an error saying .walyrics folder is not found then simply create it using mkdir.
 
 thumbsize = 150 # Thumbnail size
