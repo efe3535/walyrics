@@ -24,7 +24,11 @@ def on_metadata(player, metadata):
     if 'xesam:artist' in metadata.keys() and 'xesam:title' in metadata.keys() and metadata['xesam:title'] != prev_song:
         prev_song = metadata['xesam:title']
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
-        lyrics = song.lyrics
+        try:
+            lyrics = song.lyrics
+        except AttributeError:
+            lyrics = f"Cannot fetch {metadata['xesam:title']}'s lyrics... It is probably because of it has not been added to Genius Lyrics's list yet."
+
         draw = ImageDraw.Draw(image)
         prev_lyrics = lyrics
         
