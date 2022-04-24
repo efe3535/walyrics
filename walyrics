@@ -1,0 +1,41 @@
+#!/usr/bin/python3
+from PIL import Image, ImageDraw, ImageFont
+import gi
+gi.require_version('Gtk', '3.0')
+from dotenv import get_key
+from os import system, getlogin
+from gi.repository import Playerctl, GLib
+import lyricsgenius
+from random import randint
+from imp import load_source
+conf = load_source('confiig', f'/home/{getlogin()}/.config/walyrics/config.py')
+
+system('clear')
+apikey = get_key(dotenv_path='.env', key_to_get="GENIUS_APIKEY")
+genius = lyricsgenius.Genius(apikey)
+player = Playerctl.Player()
+
+prev_song = ''
+
+def on_metadata(player, metadata):
+    global prev_song
+    global conf
+    image = Image.open(conf.wallpaper)
+    if 'xesam:artist' in metadata.keys() and 'xesam:title' in metadata.keys() and metadata['xesam:title'] != prev_song:
+        prev_song = metadata['xesam:title']
+        song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
+        lyrics = song.lyrics
+        draw = ImageDraw.Draw(image)
+        font = ImageFont.truetype(conf.fontpath, conf.fontsize)
+        fontcolor = conf.fontcolor
+        prev_lyrics = lyrics
+        draw.text((image.width / 2 - (len(lyrics.split('\n')[0]) * conf.fontsize), conf.offset_y), lyrics, font=font, fill=fontcolor, align='left')
+        fname = randint(1,conf.randlimit)
+        system('rm /tmp/walyrics*.png')
+        image.save(f'/tmp/walyrics{fname}.png')
+        system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+
+player.connect('metadata', on_metadata)
+
+main = GLib.MainLoop()
+main.run()
