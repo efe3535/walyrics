@@ -40,10 +40,10 @@ def on_metadata(player, metadata):
         prev_song = metadata['xesam:title']
         song = genius.search_song(metadata['xesam:title'], metadata['xesam:artist'][0])
         try:
-            lyrics = song.lyrics
+            lyrics = song.lyrics[0:-5] # Remove last 5 elements because of an error caused by the API [it was also adding Embed to lyrics]
 
             if len(lyrics) <= conf.charlimit:
-                lyrics = song.lyrics
+                lyrics = song.lyrics[0:-5] # Remove last 5 elements because of an error caused by the API [it was also adding Embed to lyrics]
             else:
                 lyrics = f"Song's lyrics length exceeds your desired maximum char size ({conf.charlimit})"
         
