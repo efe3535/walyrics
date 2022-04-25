@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from PIL import Image, ImageDraw, ImageFont
+from time import sleep
 import gi
 gi.require_version('Gtk', '3.0')
 from dotenv import get_key
@@ -54,24 +55,50 @@ def on_metadata(player, metadata):
 
         draw = ImageDraw.Draw(image)
         prev_lyrics = lyrics
-        
-        draw.text((conf.offset_x, conf.offset_y), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left')
-        
         fname = randint(1,conf.randlimit)
-        
-        if conf.show_thumbs == True:
-            thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
-            image.paste(thumb, (image.width-conf.thumbsize-conf.offset_x, conf.offset_y))
  
-        if conf.persist_wallpapers == False:
-            system('rm /tmp/walyrics*.png')
-            image.save(f'/tmp/walyrics{fname}.png')
-            system(f'feh --bg-fill /tmp/walyrics{fname}.png')
-        
+        if conf.marquee != True:
+            draw.text((conf.offset_x, conf.offset_y), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left') 
+            if conf.show_thumbs == True:
+                thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
+                image.paste(thumb, (image.width-conf.thumbsize-conf.offset_x, conf.offset_y))
+     
+            if conf.persist_wallpapers == False:
+                system('rm /tmp/walyrics*.png')
+                image.save(f'/tmp/walyrics{fname}.png')
+                system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+            
+            else:
+                image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
+                system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
+
         else:
-            image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
-            system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
-        print('wallpaper set')
+            
+            tempheight = image.height
+            for i in range(image.height // conf.fontsize):
+                del draw
+                image = Image.open(conf.wallpaper)
+                draw = ImageDraw.Draw(image)
+                draw.text((conf.offset_x, conf.offset_y - (i * conf.fontsize)), lyrics, font=ImageFont.truetype(conf.fontpath, conf.fontsize), fill=conf.fontcolor ,align='left') 
+                
+                if conf.show_thumbs == True:
+                    thumb = Image.open(f"/tmp/{metadata['mpris:artUrl'].split('/')[-1]}.png")
+                    image.paste(thumb, (image.width-conf.thumbsize-conf.offset_x, conf.offset_y))
+                    del thumb
+                if conf.persist_wallpapers == False:
+                    system('rm /tmp/walyrics*.png')
+                    image.save(f'/tmp/walyrics{fname}.png')
+                    system(f'feh --bg-fill /tmp/walyrics{fname}.png')
+                    del image
+                else:
+                    image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
+                    system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
+                    del image
+                sleep(conf.marquee_sleep)
+                # system(f'feh --bg-fill {conf.wallpaper}')
+                
+                if i == tempheight // conf.fontsize - 1:
+                    i=0
 
 player.connect('metadata', on_metadata)
 
