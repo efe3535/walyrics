@@ -1,7 +1,9 @@
 ## description
 write current song's lyrics on your wallpaper.
+
 # TODOs:
-- [ ] Add Marquee option for lyrics (will probably use more resource)  
+- [x] Add Marquee option for lyrics (will probably use more resource)  
+- [ ] Switch to a better Lyrics API [donation needed...]
 
 ## installation
 copy config.example.py to /home/USERNAME/.config/walyrics/config.py
