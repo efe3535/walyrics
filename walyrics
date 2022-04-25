@@ -66,13 +66,13 @@ def on_metadata(player, metadata):
             if conf.persist_wallpapers == False:
                 system('rm /tmp/walyrics*.png')
                 image.save(f'/tmp/walyrics{fname}.png')
-                if conf.gnome != True:
+                if conf.cinnamon != True:
                     system(f'feh --bg-fill /tmp/walyrics{fname}.png')
                 else:
                     system(f"gsettings set  org.cinnamon.desktop.background picture-uri 'file:///tmp/walyrics{fname}.png'")
             else:
                 image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
-                if conf.gnome != True:
+                if conf.cinnamon != True:
                     system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
                 else:
                     system(f"gsettings set  org.cinnamon.desktop.background picture-uri 'file://{conf.persistent_wallpapers_dir}/walyrics{fname}.png'")
@@ -93,14 +93,14 @@ def on_metadata(player, metadata):
                 if conf.persist_wallpapers == False:
                     system('rm /tmp/walyrics*.png')
                     image.save(f'/tmp/walyrics{fname}.png')
-                    if conf.gnome != True:
+                    if conf.cinnamon != True:
                         system(f'feh --bg-fill /tmp/walyrics{fname}.png')
                     else:
                         system(f"gsettings set  org.cinnamon.desktop.background picture-uri 'file:///tmp/walyrics{fname}.png'")
                     del image
                 else:
                     image.save(f'{conf.persistent_wallpapers_dir}/walyrics{fname}.png')
-                    if conf.gnome != True:
+                    if conf.cinnamon != True:
                         system(f'feh --bg-fill {conf.persistent_wallpapers_dir}/walyrics{fname}.png')
                     else:
                         system(f"gsettings set  org.cinnamon.desktop.background picture-uri 'file://{conf.persistent_wallpapers_dir}/walyrics{fname}.png'")
