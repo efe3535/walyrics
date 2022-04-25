@@ -5,7 +5,9 @@ copy `env.example` to `.env` and use your own Genius(c) APIKEY
 
 you have to specify your .env path in your walyrics config
 
-### dependencies:
+### dependencies
 
 you need `lyricsgenius, pillow, playerctl, feh` to run wal
 
+### example screenshot
+![screenshot](.github/screenshot.png)
